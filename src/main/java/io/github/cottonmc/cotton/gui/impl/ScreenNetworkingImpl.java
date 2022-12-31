@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.impl;
 
+import dustw.libgui.LibGui;
 import dustw.libgui.network.LibGuiMessages;
 import dustw.libgui.network.LibGuiPacket;
 import dustw.libgui.network.PacketByteBufs;
@@ -22,109 +23,117 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class ScreenNetworkingImpl implements ScreenNetworking {
-	private static final Logger LOGGER = LogManager.getLogger();
-	private static final Map<SyncedGuiDescription, ScreenNetworkingImpl> instanceCache = new WeakHashMap<>();
+    // Packet structure:
+    //   syncId: int
+    //   message: identifier
+    //   rest: buf
 
-	private final Map<ResourceLocation, MessageReceiver> messages = new HashMap<>();
-	private SyncedGuiDescription description;
-	private final NetworkSide side;
+    public static final ResourceLocation SCREEN_MESSAGE_S2C = new ResourceLocation(LibGui.MOD_ID, "screen_message_s2c");
+    public static final ResourceLocation SCREEN_MESSAGE_C2S = new ResourceLocation(LibGui.MOD_ID, "screen_message_c2s");
 
-	private ScreenNetworkingImpl(SyncedGuiDescription description, NetworkSide side) {
-		this.description = description;
-		this.side = side;
-	}
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Map<SyncedGuiDescription, ScreenNetworkingImpl> instanceCache = new WeakHashMap<>();
 
-	public void receive(ResourceLocation message, MessageReceiver receiver) {
-		Objects.requireNonNull(message, "message");
-		Objects.requireNonNull(receiver, "receiver");
+    private final Map<ResourceLocation, MessageReceiver> messages = new HashMap<>();
+    private SyncedGuiDescription description;
+    private final NetworkSide side;
 
-		if (!messages.containsKey(message)) {
-			messages.put(message, receiver);
-		} else {
-			throw new IllegalStateException("Message " + message + " on side " + side + " already registered");
-		}
-	}
+    private ScreenNetworkingImpl(SyncedGuiDescription description, NetworkSide side) {
+        this.description = description;
+        this.side = side;
+    }
 
-	@Override
-	public void send(ResourceLocation message, Consumer<FriendlyByteBuf> writer) {
-		Objects.requireNonNull(message, "message");
-		Objects.requireNonNull(writer, "writer");
+    public void receive(ResourceLocation message, MessageReceiver receiver) {
+        Objects.requireNonNull(message, "message");
+        Objects.requireNonNull(receiver, "receiver");
 
-		FriendlyByteBuf buf = PacketByteBufs.create();
-		buf.writeVarInt(description.containerId);
-		buf.writeResourceLocation(message);
-		writer.accept(buf);
+        if (!messages.containsKey(message)) {
+            messages.put(message, receiver);
+        } else {
+            throw new IllegalStateException("Message " + message + " on side " + side + " already registered");
+        }
+    }
 
-		if (side == NetworkSide.SERVER)
-			LibGuiMessages.sendToPlayer(new LibGuiPacket(description.containerId, message, buf), (ServerPlayer) description.player());
-		else LibGuiMessages.sendToServer(new LibGuiPacket(description.containerId, message, buf));
-	}
+    @Override
+    public void send(ResourceLocation message, Consumer<FriendlyByteBuf> writer) {
+        Objects.requireNonNull(message, "message");
+        Objects.requireNonNull(writer, "writer");
 
-	public static void handle(Executor executor, Player player, FriendlyByteBuf buf) {
-		AbstractContainerMenu screenHandler = player.containerMenu;
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeVarInt(description.containerId);
+        buf.writeResourceLocation(message);
+        writer.accept(buf);
 
-		// Packet data
-		int syncId = buf.readVarInt();
-		ResourceLocation messageId = buf.readResourceLocation();
+        if (side == NetworkSide.SERVER)
+            LibGuiMessages.sendToPlayer(new LibGuiPacket(description.containerId, message, buf), (ServerPlayer) description.player());
+        else LibGuiMessages.sendToServer(new LibGuiPacket(description.containerId, message, buf));
+    }
 
-		if (!(screenHandler instanceof SyncedGuiDescription)) {
-			LOGGER.error("Received message packet for screen handler {} which is not a SyncedGuiDescription", screenHandler);
-			return;
-		} else if (syncId != screenHandler.containerId) {
-			LOGGER.error("Received message for sync ID {}, current sync ID: {}", syncId, screenHandler.containerId);
-			return;
-		}
+    public static void handle(Executor executor, Player player, FriendlyByteBuf buf) {
+        AbstractContainerMenu screenHandler = player.containerMenu;
 
-		ScreenNetworkingImpl networking = instanceCache.get(screenHandler);
+        // Packet data
+        int syncId = buf.readVarInt();
+        ResourceLocation messageId = buf.readResourceLocation();
 
-		if (networking != null) {
-			MessageReceiver receiver = networking.messages.get(messageId);
+        if (!(screenHandler instanceof SyncedGuiDescription)) {
+            LOGGER.error("Received message packet for screen handler {} which is not a SyncedGuiDescription", screenHandler);
+            return;
+        } else if (syncId != screenHandler.containerId) {
+            LOGGER.error("Received message for sync ID {}, current sync ID: {}", syncId, screenHandler.containerId);
+            return;
+        }
 
-			if (receiver != null) {
-				buf.retain();
-				executor.execute(() -> {
-					try {
-						receiver.onMessage(buf);
-					} catch (Exception e) {
-						LOGGER.error("Error handling screen message {} for {} on side {}", messageId, screenHandler, networking.side, e);
-					} finally {
-						buf.release();
-					}
-				});
-			} else {
-				LOGGER.warn("Message {} not registered for {} on side {}", messageId, screenHandler, networking.side);
-			}
-		} else {
-			LOGGER.warn("GUI description {} does not use networking", screenHandler);
-		}
-	}
+        ScreenNetworkingImpl networking = instanceCache.get(screenHandler);
 
-	public static ScreenNetworking of(SyncedGuiDescription description, NetworkSide networkSide) {
-		Objects.requireNonNull(description, "description");
-		Objects.requireNonNull(networkSide, "networkSide");
+        if (networking != null) {
+            MessageReceiver receiver = networking.messages.get(messageId);
 
-		if (description.getNetworkSide() == networkSide) {
-			return instanceCache.computeIfAbsent(description, it -> new ScreenNetworkingImpl(description, networkSide));
-		} else {
-			return DummyNetworking.INSTANCE;
-		}
-	}
+            if (receiver != null) {
+                buf.retain();
+                executor.execute(() -> {
+                    try {
+                        receiver.onMessage(buf);
+                    } catch (Exception e) {
+                        LOGGER.error("Error handling screen message {} for {} on side {}", messageId, screenHandler, networking.side, e);
+                    } finally {
+                        buf.release();
+                    }
+                });
+            } else {
+                LOGGER.warn("Message {} not registered for {} on side {}", messageId, screenHandler, networking.side);
+            }
+        } else {
+            LOGGER.warn("GUI description {} does not use networking", screenHandler);
+        }
+    }
 
-	private static final class DummyNetworking extends ScreenNetworkingImpl {
-		static final DummyNetworking INSTANCE = new DummyNetworking();
+    public static ScreenNetworking of(SyncedGuiDescription description, NetworkSide networkSide) {
+        Objects.requireNonNull(description, "description");
+        Objects.requireNonNull(networkSide, "networkSide");
 
-		private DummyNetworking() {
-			super(null, null);
-		}
+        if (description.getNetworkSide() == networkSide) {
+            return instanceCache.computeIfAbsent(description, it -> new ScreenNetworkingImpl(description, networkSide));
+        } else {
+            return DummyNetworking.INSTANCE;
+        }
+    }
 
-		@Override
-		public void receive(ResourceLocation message, MessageReceiver receiver) {
-			// NO-OP
-		}
+    private static final class DummyNetworking extends ScreenNetworkingImpl {
+        static final DummyNetworking INSTANCE = new DummyNetworking();
 
-		@Override
-		public void send(ResourceLocation message, Consumer<FriendlyByteBuf> writer) {
-			// NO-OP
-		}
-	}
+        private DummyNetworking() {
+            super(null, null);
+        }
+
+        @Override
+        public void receive(ResourceLocation message, MessageReceiver receiver) {
+            // NO-OP
+        }
+
+        @Override
+        public void send(ResourceLocation message, Consumer<FriendlyByteBuf> writer) {
+            // NO-OP
+        }
+    }
 }

@@ -8,17 +8,15 @@ import io.github.cottonmc.cotton.gui.impl.client.LibGuiConfig;
  * @since 4.0.0
  */
 public final class LibGui {
-	public static final String MOD_ID = "libgui";
-
     private LibGui() {
-	}
+    }
 
-	/**
-	 * Returns whether LibGui is running in dark mode and widgets should use dark theming.
-	 *
-	 * @return true if widgets should use dark theming, false otherwise
-	 */
-	public static boolean isDarkMode() {
-		return LibGuiConfig.darkMode().get();
-	}
+    /**
+     * Returns whether LibGui is running in dark mode and widgets should use dark theming.
+     *
+     * @return true if widgets should use dark theming, false otherwise
+     */
+    public static boolean isDarkMode() {
+        return LibGuiConfig.DARK_MODE_CONFIG.get();
+    }
 }

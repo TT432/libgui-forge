@@ -24,7 +24,7 @@ public class LibGuiMessages {
     public static void register() {
         // Make the channel. If needed you can do version checking here
         SimpleChannel net = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(LibGui.MODID, "messages"))
+                .named(new ResourceLocation(LibGui.MOD_ID, "messages"))
                 .networkProtocolVersion(() -> "1.0")
                 .clientAcceptedVersions(s -> true)
                 .serverAcceptedVersions(s -> true)

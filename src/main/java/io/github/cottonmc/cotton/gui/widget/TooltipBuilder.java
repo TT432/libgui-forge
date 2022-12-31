@@ -14,35 +14,35 @@ import java.util.List;
  */
 
 public final class TooltipBuilder {
-	final List<FormattedCharSequence> lines = new ArrayList<>();
+    final List<FormattedCharSequence> lines = new ArrayList<>();
 
-	int size() {
-		return lines.size();
-	}
+    int size() {
+        return lines.size();
+    }
 
-	/**
-	 * Adds the lines to this builder.
-	 *
-	 * @param lines the lines
-	 * @return this builder
-	 */
-	public TooltipBuilder add(Component... lines) {
-		for (Component line : lines) {
-			this.lines.add(line.getVisualOrderText());
-		}
+    /**
+     * Adds the lines to this builder.
+     *
+     * @param lines the lines
+     * @return this builder
+     */
+    public TooltipBuilder add(Component... lines) {
+        for (Component line : lines) {
+            this.lines.add(line.getVisualOrderText());
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	/**
-	 * Adds the lines to this builder.
-	 *
-	 * @param lines the lines
-	 * @return this builder
-	 */
-	public TooltipBuilder add(FormattedCharSequence... lines) {
-		Collections.addAll(this.lines, lines);
+    /**
+     * Adds the lines to this builder.
+     *
+     * @param lines the lines
+     * @return this builder
+     */
+    public TooltipBuilder add(FormattedCharSequence... lines) {
+        Collections.addAll(this.lines, lines);
 
-		return this;
-	}
+        return this;
+    }
 }

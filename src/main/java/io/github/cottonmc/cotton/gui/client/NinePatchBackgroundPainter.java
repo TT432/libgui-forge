@@ -24,78 +24,79 @@ import java.util.function.Consumer;
  *
  * @since 4.0.0
  */
+
 public final class NinePatchBackgroundPainter implements BackgroundPainter {
-	private final NinePatch<ResourceLocation> ninePatch;
-	private int topPadding = 0;
-	private int leftPadding = 0;
-	private int bottomPadding = 0;
-	private int rightPadding = 0;
+    private final NinePatch<ResourceLocation> ninePatch;
+    private int topPadding = 0;
+    private int leftPadding = 0;
+    private int bottomPadding = 0;
+    private int rightPadding = 0;
 
-	public NinePatchBackgroundPainter(NinePatch<ResourceLocation> ninePatch) {
-		this.ninePatch = ninePatch;
-	}
+    public NinePatchBackgroundPainter(NinePatch<ResourceLocation> ninePatch) {
+        this.ninePatch = ninePatch;
+    }
 
-	public int getTopPadding() {
-		return topPadding;
-	}
+    public int getTopPadding() {
+        return topPadding;
+    }
 
-	public NinePatchBackgroundPainter setTopPadding(int topPadding) {
-		this.topPadding = topPadding;
-		return this;
-	}
+    public NinePatchBackgroundPainter setTopPadding(int topPadding) {
+        this.topPadding = topPadding;
+        return this;
+    }
 
-	public int getLeftPadding() {
-		return leftPadding;
-	}
+    public int getLeftPadding() {
+        return leftPadding;
+    }
 
-	public NinePatchBackgroundPainter setLeftPadding(int leftPadding) {
-		this.leftPadding = leftPadding;
-		return this;
-	}
+    public NinePatchBackgroundPainter setLeftPadding(int leftPadding) {
+        this.leftPadding = leftPadding;
+        return this;
+    }
 
-	public int getBottomPadding() {
-		return bottomPadding;
-	}
+    public int getBottomPadding() {
+        return bottomPadding;
+    }
 
-	public NinePatchBackgroundPainter setBottomPadding(int bottomPadding) {
-		this.bottomPadding = bottomPadding;
-		return this;
-	}
+    public NinePatchBackgroundPainter setBottomPadding(int bottomPadding) {
+        this.bottomPadding = bottomPadding;
+        return this;
+    }
 
-	public int getRightPadding() {
-		return rightPadding;
-	}
+    public int getRightPadding() {
+        return rightPadding;
+    }
 
-	public NinePatchBackgroundPainter setRightPadding(int rightPadding) {
-		this.rightPadding = rightPadding;
-		return this;
-	}
+    public NinePatchBackgroundPainter setRightPadding(int rightPadding) {
+        this.rightPadding = rightPadding;
+        return this;
+    }
 
-	public NinePatchBackgroundPainter setPadding(int padding) {
-		this.topPadding = this.leftPadding = this.bottomPadding = this.rightPadding = padding;
-		return this;
-	}
+    public NinePatchBackgroundPainter setPadding(int padding) {
+        this.topPadding = this.leftPadding = this.bottomPadding = this.rightPadding = padding;
+        return this;
+    }
 
-	public NinePatchBackgroundPainter setPadding(int vertical, int horizontal) {
-		this.topPadding = this.bottomPadding = vertical;
-		this.leftPadding = this.rightPadding = horizontal;
-		return this;
-	}
+    public NinePatchBackgroundPainter setPadding(int vertical, int horizontal) {
+        this.topPadding = this.bottomPadding = vertical;
+        this.leftPadding = this.rightPadding = horizontal;
+        return this;
+    }
 
-	public NinePatchBackgroundPainter setPadding(int topPadding, int leftPadding, int bottomPadding, int rightPadding) {
-		this.topPadding = topPadding;
-		this.leftPadding = leftPadding;
-		this.bottomPadding = bottomPadding;
-		this.rightPadding = rightPadding;
+    public NinePatchBackgroundPainter setPadding(int topPadding, int leftPadding, int bottomPadding, int rightPadding) {
+        this.topPadding = topPadding;
+        this.leftPadding = leftPadding;
+        this.bottomPadding = bottomPadding;
+        this.rightPadding = rightPadding;
 
-		return this;
-	}
+        return this;
+    }
 
-	@Override
-	public void paintBackground(PoseStack matrices, int left, int top, WWidget panel) {
-		matrices.pushPose();
-		matrices.translate(left - leftPadding, top - topPadding, 0);
-		ninePatch.draw(NinePatchTextureRendererImpl.INSTANCE, matrices, panel.getWidth() + leftPadding + rightPadding, panel.getHeight() + topPadding + bottomPadding);
-		matrices.popPose();
-	}
+    @Override
+    public void paintBackground(PoseStack matrices, int left, int top, WWidget panel) {
+        matrices.pushPose();
+        matrices.translate(left - leftPadding, top - topPadding, 0);
+        ninePatch.draw(NinePatchTextureRendererImpl.INSTANCE, matrices, panel.getWidth() + leftPadding + rightPadding, panel.getHeight() + topPadding + bottomPadding);
+        matrices.popPose();
+    }
 }

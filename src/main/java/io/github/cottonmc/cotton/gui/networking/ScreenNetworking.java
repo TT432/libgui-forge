@@ -46,50 +46,50 @@ import java.util.function.Consumer;
  * @since 3.3.0
  */
 public interface ScreenNetworking {
-	/**
-	 * Gets a networking handler for the GUI description that is active on the specified side.
-	 *
-	 * @param description the GUI description
-	 * @param networkSide the network side
-	 * @return the network handler
-	 * @throws NullPointerException if either parameter is null
-	 */
-	static ScreenNetworking of(SyncedGuiDescription description, NetworkSide networkSide) {
-		return ScreenNetworkingImpl.of(description, networkSide);
-	}
+    /**
+     * Gets a networking handler for the GUI description that is active on the specified side.
+     *
+     * @param description the GUI description
+     * @param networkSide the network side
+     * @return the network handler
+     * @throws NullPointerException if either parameter is null
+     */
+    static ScreenNetworking of(SyncedGuiDescription description, NetworkSide networkSide) {
+        return ScreenNetworkingImpl.of(description, networkSide);
+    }
 
-	/**
-	 * Registers a message receiver for the message.
-	 *
-	 * @param message  the screen message ID
-	 * @param receiver the message receiver
-	 * @throws IllegalStateException if the message has already been registered
-	 * @throws NullPointerException  if either parameter is null
-	 */
-	void receive(ResourceLocation message, MessageReceiver receiver);
+    /**
+     * Registers a message receiver for the message.
+     *
+     * @param message  the screen message ID
+     * @param receiver the message receiver
+     * @throws IllegalStateException if the message has already been registered
+     * @throws NullPointerException  if either parameter is null
+     */
+    void receive(ResourceLocation message, MessageReceiver receiver);
 
-	/**
-	 * Sends a screen message to the other side of the connection.
-	 *
-	 * @param message the screen message ID
-	 * @param writer  a writer that writes the message contents to a packet buffer;
-	 *                should not read the buffer
-	 * @throws NullPointerException if either parameter is null
-	 */
-	void send(ResourceLocation message, Consumer<FriendlyByteBuf> writer);
+    /**
+     * Sends a screen message to the other side of the connection.
+     *
+     * @param message the screen message ID
+     * @param writer  a writer that writes the message contents to a packet buffer;
+     *                should not read the buffer
+     * @throws NullPointerException if either parameter is null
+     */
+    void send(ResourceLocation message, Consumer<FriendlyByteBuf> writer);
 
-	/**
-	 * A handler for received screen messages.
-	 */
-	@FunctionalInterface
-	interface MessageReceiver {
-		/**
-		 * Handles a received screen message.
-		 *
-		 * <p>This method should only read from the buffer, not write to it.
-		 *
-		 * @param buf the message packet buffer
-		 */
-		void onMessage(FriendlyByteBuf buf);
-	}
+    /**
+     * A handler for received screen messages.
+     */
+    @FunctionalInterface
+    interface MessageReceiver {
+        /**
+         * Handles a received screen message.
+         *
+         * <p>This method should only read from the buffer, not write to it.
+         *
+         * @param buf the message packet buffer
+         */
+        void onMessage(FriendlyByteBuf buf);
+    }
 }

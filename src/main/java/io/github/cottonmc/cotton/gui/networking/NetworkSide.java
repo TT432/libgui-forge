@@ -6,8 +6,12 @@ package io.github.cottonmc.cotton.gui.networking;
  * @since 3.3.0
  */
 public enum NetworkSide {
-	/** The logical client. */
-	CLIENT,
-	/** The logical server. */
-	SERVER
+    /**
+     * The logical client.
+     */
+    CLIENT,
+    /**
+     * The logical server.
+     */
+    SERVER
 }
