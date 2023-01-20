@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
@@ -8,6 +9,7 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -170,7 +172,7 @@ public class WLabeledSlider extends WAbstractSlider {
         matrices.translate(x, y, 0);
         if (axis == Axis.VERTICAL) {
             matrices.translate(0, height, 0);
-            matrices.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(270));
+            matrices.mulPose(Vector3f.ZP.rotationDegrees(270));
         }
         drawButton(matrices, 0, 0, 0, aWidth);
 
@@ -186,7 +188,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
         if (thumbState == 1 && isFocused()) {
             float px = 1 / 32f;
-            ScreenDrawing.texturedRect(matrices, thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24 * px, 0 * px, 32 * px, 20 * px, 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(matrices, thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
         }
 
         if (label != null) {
@@ -217,7 +219,7 @@ public class WLabeledSlider extends WAbstractSlider {
     @Override
     public void addNarrations(NarrationElementOutput builder) {
         if (getLabel() != null) {
-            builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.LABELED_SLIDER_TITLE_KEY, getLabel(), value, min, max));
+            builder.add(NarratedElementType.TITLE, new TranslatableComponent(NarrationMessages.LABELED_SLIDER_TITLE_KEY, getLabel(), value, min, max));
             builder.add(NarratedElementType.USAGE, NarrationMessages.SLIDER_USAGE);
         } else {
             super.addNarrations(builder);

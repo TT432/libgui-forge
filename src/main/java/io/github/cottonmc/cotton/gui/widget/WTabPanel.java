@@ -15,6 +15,7 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.Contract;
@@ -421,10 +422,10 @@ public class WTabPanel extends WPanel {
             Component label = data.getTitle();
 
             if (label != null) {
-                builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.TAB_TITLE_KEY, label));
+                builder.add(NarratedElementType.TITLE, new TranslatableComponent(NarrationMessages.TAB_TITLE_KEY, label));
             }
 
-            builder.add(NarratedElementType.POSITION, Component.translatable(NarrationMessages.TAB_POSITION_KEY, tabWidgets.indexOf(this) + 1, tabWidgets.size()));
+            builder.add(NarratedElementType.POSITION, new TranslatableComponent(NarrationMessages.TAB_POSITION_KEY, tabWidgets.indexOf(this) + 1, tabWidgets.size()));
         }
     }
 

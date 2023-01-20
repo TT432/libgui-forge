@@ -10,9 +10,9 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -44,7 +44,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
     private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
 
     public CottonClientScreen(GuiDescription description) {
-        this(CommonComponents.EMPTY, description);
+        this(new TextComponent(""), description);
     }
 
     public CottonClientScreen(Component title, GuiDescription description) {

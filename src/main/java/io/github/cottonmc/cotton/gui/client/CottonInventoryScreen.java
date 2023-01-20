@@ -12,9 +12,9 @@ import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
@@ -41,7 +41,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
      * @since 5.2.0
      */
     public CottonInventoryScreen(T description, Inventory inventory) {
-        this(description, inventory, CommonComponents.EMPTY);
+        this(description, inventory, new TextComponent(""));
     }
 
     /**

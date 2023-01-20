@@ -11,6 +11,7 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.Nullable;
@@ -218,9 +219,9 @@ public class WToggleButton extends WWidget {
         Component title;
 
         if (label != null) {
-            title = Component.translatable(NarrationMessages.TOGGLE_BUTTON_NAMED_KEY, label, onOff);
+            title = new TranslatableComponent(NarrationMessages.TOGGLE_BUTTON_NAMED_KEY, label, onOff);
         } else {
-            title = Component.translatable(NarrationMessages.TOGGLE_BUTTON_UNNAMED_KEY, onOff);
+            title = new TranslatableComponent(NarrationMessages.TOGGLE_BUTTON_UNNAMED_KEY, onOff);
         }
 
         builder.add(NarratedElementType.TITLE, title);

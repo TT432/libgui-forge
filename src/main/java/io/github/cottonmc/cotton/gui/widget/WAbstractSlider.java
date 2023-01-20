@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -367,7 +367,7 @@ public abstract class WAbstractSlider extends WWidget {
 
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
+        builder.add(NarratedElementType.TITLE, new TranslatableComponent(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
         builder.add(NarratedElementType.USAGE, NarrationMessages.SLIDER_USAGE);
     }
 

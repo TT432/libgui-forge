@@ -3,6 +3,7 @@ package io.github.cottonmc.cotton.gui.widget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
@@ -14,9 +15,9 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -253,7 +254,8 @@ public class WTextField extends WWidget {
         buffer.vertex(model, x + width, y + height, 0).endVertex();
         buffer.vertex(model, x + width, y, 0).endVertex();
         buffer.vertex(model, x, y, 0).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        buffer.end();
+        BufferUploader.end(buffer);
         RenderSystem.disableColorLogicOp();
         RenderSystem.enableTexture();
     }
@@ -486,10 +488,10 @@ public class WTextField extends WWidget {
 
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.TEXT_FIELD_TITLE_KEY, text));
+        builder.add(NarratedElementType.TITLE, new TranslatableComponent(NarrationMessages.TEXT_FIELD_TITLE_KEY, text));
 
         if (suggestion != null) {
-            builder.add(NarratedElementType.HINT, Component.translatable(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
+            builder.add(NarratedElementType.HINT, new TranslatableComponent(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
         }
     }
 }

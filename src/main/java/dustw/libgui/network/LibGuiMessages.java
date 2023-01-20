@@ -38,7 +38,7 @@ public class LibGuiMessages {
         net.messageBuilder(LibGuiPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(LibGuiPacket::new)
                 .encoder(LibGuiPacket::toBytes)
-                .consumerNetworkThread(LibGuiPacket::handler)
+                .consumer(LibGuiPacket::handler)
                 .add();
     }
 

@@ -5,6 +5,8 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerData;
@@ -200,13 +202,13 @@ public class WBar extends WWidget {
         if (tooltipLabel != null) {
             int value = (field >= 0) ? properties.get(field) : 0;
             int valMax = (max >= 0) ? properties.get(max) : maxValue;
-            information.add(Component.translatable(tooltipLabel, value, valMax));
+            information.add(new TranslatableComponent(tooltipLabel, value, valMax));
         }
         if (tooltipTextComponent != null) {
             try {
                 information.add(tooltipTextComponent);
             } catch (Throwable t) {
-                information.add(Component.literal(t.getLocalizedMessage()));
+                information.add(new TextComponent(t.getLocalizedMessage()));
             }
         }
     }
