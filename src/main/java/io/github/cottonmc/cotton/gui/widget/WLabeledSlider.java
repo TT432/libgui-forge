@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class WLabeledSlider extends WAbstractSlider {
     @Nullable
-    private Component label = null;
+    protected Component label = null;
     @Nullable
-    private LabelUpdater labelUpdater = null;
-    private HorizontalAlignment labelAlignment = HorizontalAlignment.CENTER;
+    protected LabelUpdater labelUpdater = null;
+    protected HorizontalAlignment labelAlignment = HorizontalAlignment.CENTER;
 
     /**
      * Constructs a horizontal slider with no default label.
@@ -200,7 +200,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
     // state = 1: regular, 2: hovered, 0: disabled/dragging
 
-    private void drawButton(PoseStack matrices, int x, int y, int state, int width) {
+    protected void drawButton(PoseStack matrices, int x, int y, int state, int width) {
         float px = 1 / 256f;
         float buttonLeft = 0 * px;
         float buttonTop = (46 + (state * 20)) * px;

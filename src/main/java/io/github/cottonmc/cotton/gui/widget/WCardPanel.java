@@ -12,8 +12,8 @@ import java.util.NoSuchElementException;
  * @since 3.0.0
  */
 public class WCardPanel extends WPanel {
-    private final List<WWidget> cards = new ArrayList<>();
-    private int selectedIndex = 0;
+    protected final List<WWidget> cards = new ArrayList<>();
+    protected int selectedIndex = 0;
 
     /**
      * Adds a card to this panel without resizing it.

@@ -54,12 +54,12 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
      * The scroll bar of this list.
      */
     protected WScrollBar scrollBar = new WScrollBar(Axis.VERTICAL);
-    private int lastScroll = -1;
+    protected int lastScroll = -1;
 
     /**
      * The widgets whose host hasn't been set yet.
      */
-    private final List<W> requiresHost = new ArrayList<>();
+    protected final List<W> requiresHost = new ArrayList<>();
 
     /**
      * Constructs a list panel.
@@ -99,7 +99,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		}*/
     }
 
-    private W createChild() {
+    protected W createChild() {
         W child = supplier.get();
         child.setParent(this);
         // Set up the widget's host
@@ -125,7 +125,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
         setRequiredHosts(host);
     }
 
-    private void setRequiredHosts(GuiDescription host) {
+    protected void setRequiredHosts(GuiDescription host) {
         for (W widget : requiresHost) {
             widget.setHost(host);
         }

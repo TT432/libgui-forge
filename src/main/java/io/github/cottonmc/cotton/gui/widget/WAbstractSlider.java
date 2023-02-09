@@ -32,7 +32,7 @@ public abstract class WAbstractSlider extends WWidget {
     /**
      * The minimum time between two draggingFinished events caused by scrolling ({@link #onMouseScroll}).
      */
-    private static final int DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING = 10;
+    protected static final int DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING = 10;
 
     protected int min, max;
     protected final Axis axis;
@@ -65,14 +65,14 @@ public abstract class WAbstractSlider extends WWidget {
     /**
      * True if there is a pending dragging finished event caused by the keyboard.
      */
-    private boolean pendingDraggingFinishedFromKeyboard = false;
-    private int draggingFinishedFromScrollingTimer = 0;
-    private boolean pendingDraggingFinishedFromScrolling = false;
+    protected boolean pendingDraggingFinishedFromKeyboard = false;
+    protected int draggingFinishedFromScrollingTimer = 0;
+    protected boolean pendingDraggingFinishedFromScrolling = false;
 
     @Nullable
-    private IntConsumer valueChangeListener = null;
+    protected IntConsumer valueChangeListener = null;
     @Nullable
-    private IntConsumer draggingFinishedListener = null;
+    protected IntConsumer draggingFinishedListener = null;
 
     protected WAbstractSlider(int min, int max, Axis axis) {
         if (max <= min) throw new IllegalArgumentException("Minimum value must be smaller than the maximum!");
@@ -157,7 +157,7 @@ public abstract class WAbstractSlider extends WWidget {
         return InputResult.PROCESSED;
     }
 
-    private void moveSlider(int x, int y) {
+    protected void moveSlider(int x, int y) {
         int axisPos = switch (direction) {
             case UP -> height - y;
             case DOWN -> y;
