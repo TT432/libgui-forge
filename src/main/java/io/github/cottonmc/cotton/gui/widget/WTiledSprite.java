@@ -11,8 +11,8 @@ import net.minecraft.resources.ResourceLocation;
  * @since 2.0.0
  */
 public class WTiledSprite extends WSprite {
-    private int tileWidth;
-    private int tileHeight;
+    protected int tileWidth;
+    protected int tileHeight;
 
     /**
      * Create a tiled sprite.

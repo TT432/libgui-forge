@@ -69,23 +69,22 @@ public class WItemSlot extends WWidget {
     public static final ResourceLocation SLOT_TEXTURE = new ResourceLocation(LibGui.MOD_ID, "textures/widget/item_slot.png");
 
     private static final VisualLogger LOGGER = new VisualLogger(WItemSlot.class);
-    private final List<ValidatedSlot> peers = new ArrayList<>();
+    protected final List<ValidatedSlot> peers = new ArrayList<>();
     @Nullable
-
-    private BackgroundPainter backgroundPainter = null;
+    protected BackgroundPainter backgroundPainter = null;
     @Nullable
-    private Icon icon = null;
-    private Container inventory;
-    private int startIndex = 0;
-    private int slotsWide = 1;
-    private int slotsHigh = 1;
-    private boolean big = false;
-    private boolean insertingAllowed = true;
-    private boolean takingAllowed = true;
-    private int focusedSlot = -1;
-    private int hoveredSlot = -1;
-    private Predicate<ItemStack> filter = ValidatedSlot.DEFAULT_ITEM_FILTER;
-    private final Set<ChangeListener> listeners = new HashSet<>();
+    protected Icon icon = null;
+    protected Container inventory;
+    protected int startIndex = 0;
+    protected int slotsWide = 1;
+    protected int slotsHigh = 1;
+    protected boolean big = false;
+    protected boolean insertingAllowed = true;
+    protected boolean takingAllowed = true;
+    protected int focusedSlot = -1;
+    protected int hoveredSlot = -1;
+    protected Predicate<ItemStack> filter = ValidatedSlot.DEFAULT_ITEM_FILTER;
+    protected final Set<ChangeListener> listeners = new HashSet<>();
 
     public WItemSlot(Container inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
         this();
@@ -97,7 +96,7 @@ public class WItemSlot extends WWidget {
         //this.ltr = ltr;
     }
 
-    private WItemSlot() {
+    protected WItemSlot() {
         hoveredProperty().addListener((property, from, to) -> {
             assert to != null;
             if (!to) hoveredSlot = -1;

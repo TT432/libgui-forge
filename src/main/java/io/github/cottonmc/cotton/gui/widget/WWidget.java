@@ -51,7 +51,7 @@ public class WWidget {
     @Nullable
     protected GuiDescription host;
 
-    private final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnull().name("WWidget.hovered").build();
+    protected final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnull().name("WWidget.hovered").build();
 
     /**
      * Sets the location of this widget relative to its parent.

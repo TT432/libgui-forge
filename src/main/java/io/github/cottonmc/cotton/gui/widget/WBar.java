@@ -61,7 +61,7 @@ public class WBar extends WWidget {
      * and the maximum value is usually read from the property with ID {@link #max}.
      */
     protected ContainerData properties;
-    private boolean manuallySetProperties = false;
+    protected boolean manuallySetProperties = false;
 
     /**
      * The direction of this bar, representing where the bar will grow

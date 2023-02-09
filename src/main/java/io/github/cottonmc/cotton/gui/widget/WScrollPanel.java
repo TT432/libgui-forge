@@ -12,11 +12,11 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult;
  * @since 2.0.0
  */
 public class WScrollPanel extends WClippedPanel {
-    private static final int SCROLL_BAR_SIZE = 8;
-    private final WWidget widget;
+    protected static final int SCROLL_BAR_SIZE = 8;
+    protected final WWidget widget;
 
-    private TriState scrollingHorizontally = TriState.DEFAULT;
-    private TriState scrollingVertically = TriState.DEFAULT;
+    protected TriState scrollingHorizontally = TriState.DEFAULT;
+    protected TriState scrollingVertically = TriState.DEFAULT;
 
     /**
      * The horizontal scroll bar of this panel.
@@ -28,8 +28,8 @@ public class WScrollPanel extends WClippedPanel {
      */
     protected WScrollBar verticalScrollBar = new WScrollBar(Axis.VERTICAL);
 
-    private int lastHorizontalScroll = -1;
-    private int lastVerticalScroll = -1;
+    protected int lastHorizontalScroll = -1;
+    protected int lastVerticalScroll = -1;
 
     /**
      * Creates a vertically scrolling panel.

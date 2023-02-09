@@ -23,7 +23,7 @@ public abstract class WPanel extends WWidget {
      */
     protected final List<WWidget> children = new WidgetList(this, new ArrayList<>());
 
-    private BackgroundPainter backgroundPainter = null;
+    protected BackgroundPainter backgroundPainter = null;
 
     /**
      * Removes the widget from this panel.
@@ -212,7 +212,7 @@ public abstract class WPanel extends WWidget {
     }
 
     @Nullable
-    private WWidget checkFocusCycling(boolean lookForwards, WWidget child) {
+    protected WWidget checkFocusCycling(boolean lookForwards, WWidget child) {
         if (child.canFocus() || child instanceof WPanel) {
             return child.cycleFocus(lookForwards);
         }
