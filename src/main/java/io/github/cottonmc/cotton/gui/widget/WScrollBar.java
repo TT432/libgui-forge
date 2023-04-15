@@ -106,7 +106,7 @@ public class WScrollBar extends WWidget {
         return true;
     }
 
-    private static void drawBeveledOutline(PoseStack matrices, int x, int y, int width, int height, int topleft, int bottomright) {
+    protected static void drawBeveledOutline(PoseStack matrices, int x, int y, int width, int height, int topleft, int bottomright) {
         ScreenDrawing.coloredRect(matrices, x, y, width, 1, topleft); //Top shadow
         ScreenDrawing.coloredRect(matrices, x, y + 1, 1, height - 1, topleft); //Left shadow
         ScreenDrawing.coloredRect(matrices, x + width - 1, y + 1, 1, height - 1, bottomright); //Right hilight

@@ -18,12 +18,12 @@ import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
-    private static final ResourceLocation DARK_WIDGETS_LOCATION = new ResourceLocation("libgui", "textures/widget/dark_widgets.png");
-    private static final int BUTTON_HEIGHT = 20;
-    private static final int ICON_SPACING = 2;
+    protected static final ResourceLocation DARK_WIDGETS_LOCATION = new ResourceLocation("libgui", "textures/widget/dark_widgets.png");
+    protected static final int BUTTON_HEIGHT = 20;
+    protected static final int ICON_SPACING = 2;
 
     @Nullable
-    private Component label;
+    protected Component label;
     protected int color = WLabel.DEFAULT_TEXT_COLOR;
     protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
     /**
@@ -32,13 +32,13 @@ public class WButton extends WWidget {
      * @since 6.4.0
      */
     protected int iconSize = 16;
-    private boolean enabled = true;
+    protected boolean enabled = true;
     protected HorizontalAlignment alignment = HorizontalAlignment.CENTER;
 
     @Nullable
-    private Runnable onClick;
+    protected Runnable onClick;
     @Nullable
-    private Icon icon = null;
+    protected Icon icon = null;
 
     /**
      * Constructs a button with no label and no icon.

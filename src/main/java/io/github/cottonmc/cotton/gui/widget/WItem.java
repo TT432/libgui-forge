@@ -20,10 +20,10 @@ import java.util.Objects;
  * @since 1.8.0
  */
 public class WItem extends WWidget {
-    private List<ItemStack> items;
-    private int duration = 25;
-    private int ticks = 0;
-    private int current = 0;
+    protected List<ItemStack> items;
+    protected int duration = 25;
+    protected int ticks = 0;
+    protected int current = 0;
 
     public WItem(List<ItemStack> items) {
         setItems(items);
@@ -104,7 +104,7 @@ public class WItem extends WWidget {
      * Gets the default stacks ({@link Item#getDefaultInstance()} ()}) of each item in a tag.
      */
     @SuppressWarnings("unchecked")
-    private static List<ItemStack> getRenderStacks(Tag<? extends ItemLike> tag) {
+    protected static List<ItemStack> getRenderStacks(Tag<? extends ItemLike> tag) {
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
 
         for (ItemLike item : tag.getValues()) {

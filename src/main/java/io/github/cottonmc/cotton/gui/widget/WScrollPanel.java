@@ -6,30 +6,32 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
+import java.util.function.Function;
+
 /**
  * Similar to the JScrollPane in Swing, this widget represents a scrollable widget.
  *
  * @since 2.0.0
  */
 public class WScrollPanel extends WClippedPanel {
-    private static final int SCROLL_BAR_SIZE = 8;
-    private final WWidget widget;
+    protected int scrollBarSize = 8;
+    protected final WWidget widget;
 
-    private TriState scrollingHorizontally = TriState.DEFAULT;
-    private TriState scrollingVertically = TriState.DEFAULT;
+    protected TriState scrollingHorizontally = TriState.DEFAULT;
+    protected TriState scrollingVertically = TriState.DEFAULT;
 
     /**
      * The horizontal scroll bar of this panel.
      */
-    protected WScrollBar horizontalScrollBar = new WScrollBar(Axis.HORIZONTAL);
+    protected WScrollBar horizontalScrollBar;
 
     /**
      * The vertical scroll bar of this panel.
      */
-    protected WScrollBar verticalScrollBar = new WScrollBar(Axis.VERTICAL);
+    protected WScrollBar verticalScrollBar;
 
-    private int lastHorizontalScroll = -1;
-    private int lastVerticalScroll = -1;
+    protected int lastHorizontalScroll = -1;
+    protected int lastVerticalScroll = -1;
 
     /**
      * Creates a vertically scrolling panel.
@@ -40,11 +42,34 @@ public class WScrollPanel extends WClippedPanel {
         this.widget = widget;
 
         widget.setParent(this);
+        horizontalScrollBar = new WScrollBar(Axis.HORIZONTAL);
+        verticalScrollBar = new WScrollBar(Axis.VERTICAL);
         horizontalScrollBar.setParent(this);
         verticalScrollBar.setParent(this);
 
         children.add(widget);
         children.add(verticalScrollBar); // Only vertical scroll bar
+    }
+
+    /**
+     * Creates a vertically scrolling panel with custom scroll bar.
+     *
+     * @param widget the viewed widget
+     * @param scrollBarProvider a function to provide scroll bar of specified axis
+     * @param scrollBarSize width of scroll bars
+     */
+    public WScrollPanel(WWidget widget, Function<Axis, WScrollBar> scrollBarProvider, int scrollBarSize) {
+        this.widget = widget;
+
+        widget.setParent(this);
+        horizontalScrollBar = scrollBarProvider.apply(Axis.HORIZONTAL);
+        verticalScrollBar = scrollBarProvider.apply(Axis.VERTICAL);
+        horizontalScrollBar.setParent(this);
+        verticalScrollBar.setParent(this);
+
+        children.add(widget);
+        children.add(verticalScrollBar); // Only vertical scroll bar
+        this.scrollBarSize = scrollBarSize;
     }
 
     /**
@@ -106,10 +131,10 @@ public class WScrollPanel extends WClippedPanel {
         boolean horizontal = hasHorizontalScrollbar();
         boolean vertical = hasVerticalScrollbar();
 
-        int offset = (horizontal && vertical) ? SCROLL_BAR_SIZE : 0;
-        verticalScrollBar.setSize(SCROLL_BAR_SIZE, this.height - offset);
+        int offset = (horizontal && vertical) ? scrollBarSize : 0;
+        verticalScrollBar.setSize(scrollBarSize, this.height - offset);
         verticalScrollBar.setLocation(this.width - verticalScrollBar.getWidth(), 0);
-        horizontalScrollBar.setSize(this.width - offset, SCROLL_BAR_SIZE);
+        horizontalScrollBar.setSize(this.width - offset, scrollBarSize);
         horizontalScrollBar.setLocation(0, this.height - horizontalScrollBar.getHeight());
 
         if (widget instanceof WPanel) ((WPanel) widget).layout();
@@ -118,9 +143,9 @@ public class WScrollPanel extends WClippedPanel {
         int y = vertical ? -verticalScrollBar.getValue() : 0;
         widget.setLocation(x, y);
 
-        verticalScrollBar.setWindow(this.height - (horizontal ? SCROLL_BAR_SIZE : 0));
+        verticalScrollBar.setWindow(this.height - (horizontal ? scrollBarSize : 0));
         verticalScrollBar.setMaxValue(widget.getHeight());
-        horizontalScrollBar.setWindow(this.width - (vertical ? SCROLL_BAR_SIZE : 0));
+        horizontalScrollBar.setWindow(this.width - (vertical ? scrollBarSize : 0));
         horizontalScrollBar.setMaxValue(widget.getWidth());
 
         if (vertical) children.add(verticalScrollBar);
@@ -129,13 +154,13 @@ public class WScrollPanel extends WClippedPanel {
 
     private boolean hasHorizontalScrollbar() {
         return (scrollingHorizontally == TriState.DEFAULT)
-                ? (widget.width > this.width - SCROLL_BAR_SIZE)
+                ? (widget.width > this.width - scrollBarSize)
                 : scrollingHorizontally.get();
     }
 
     private boolean hasVerticalScrollbar() {
         return (scrollingVertically == TriState.DEFAULT)
-                ? (widget.height > this.height - SCROLL_BAR_SIZE)
+                ? (widget.height > this.height - scrollBarSize)
                 : scrollingVertically.get();
     }
 

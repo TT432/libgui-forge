@@ -30,44 +30,44 @@ public class WTextField extends WWidget {
     public static final int CURSOR_HEIGHT = 12;
 
 
-    private Font font;
+    protected Font font;
 
-    private String text = "";
-    private int maxLength = 16;
-    private boolean editable = true;
-    private int tickCount = 0;
+    protected String text = "";
+    protected int maxLength = 16;
+    protected boolean editable = true;
+    protected int tickCount = 0;
 
-    private int disabledColor = 0x707070;
-    private int enabledColor = 0xE0E0E0;
-    private int suggestionColor = 0x808080;
+    protected int disabledColor = 0x707070;
+    protected int enabledColor = 0xE0E0E0;
+    protected int suggestionColor = 0x808080;
 
-    private static final int BACKGROUND_COLOR = 0xFF000000;
-    private static final int BORDER_COLOR_SELECTED = 0xFFFFFFA0;
-    private static final int BORDER_COLOR_UNSELECTED = 0xFFA0A0A0;
-    private static final int CURSOR_COLOR = 0xFFD0D0D0;
+    protected static final int BACKGROUND_COLOR = 0xFF000000;
+    protected static final int BORDER_COLOR_SELECTED = 0xFFFFFFA0;
+    protected static final int BORDER_COLOR_UNSELECTED = 0xFFA0A0A0;
+    protected static final int CURSOR_COLOR = 0xFFD0D0D0;
 
     @Nullable
-    private Component suggestion = null;
+    protected Component suggestion = null;
 
     // Index of the leftmost character to be rendered.
-    private int scrollOffset = 0;
+    protected int scrollOffset = 0;
 
-    private int cursor = 0;
+    protected int cursor = 0;
     /**
      * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with no existing
      * selection, the selection will be anchored to where you were, but the cursor will move left, expanding the
      * selection as you continue to move left. If you move to the right, eventually you'll overtake the anchor, drop the
      * anchor at the same place and start expanding the selection rightwards instead.
      */
-    private int select = -1;
+    protected int select = -1;
 
-    private Consumer<String> onChanged;
+    protected Consumer<String> onChanged;
 
-    private Predicate<String> textPredicate;
+    protected Predicate<String> textPredicate;
 
 
     @Nullable
-    private BackgroundPainter backgroundPainter;
+    protected BackgroundPainter backgroundPainter;
 
     public WTextField() {
     }
@@ -87,7 +87,7 @@ public class WTextField extends WWidget {
         setTextWithResult(s);
     }
 
-    private boolean setTextWithResult(String s) {
+    protected boolean setTextWithResult(String s) {
         if (this.textPredicate == null || this.textPredicate.test(s)) {
             this.text = (s.length() > maxLength) ? s.substring(0, maxLength) : s;
             // Call change listener
@@ -149,7 +149,7 @@ public class WTextField extends WWidget {
     }
 
 
-    private void checkScrollOffset() {
+    protected void checkScrollOffset() {
         int rightMostScrollOffset = text.length() - font.plainSubstrByWidth(text, width - TEXT_PADDING_X * 2, true).length();
         scrollOffset = Math.min(rightMostScrollOffset, scrollOffset);
     }
@@ -240,7 +240,7 @@ public class WTextField extends WWidget {
     }
 
 
-    private void invertedRect(PoseStack matrices, int x, int y, int width, int height) {
+    protected void invertedRect(PoseStack matrices, int x, int y, int width, int height) {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         Matrix4f model = matrices.last().pose();
@@ -362,7 +362,7 @@ public class WTextField extends WWidget {
     }
 
 
-    private void insertText(String toInsert) {
+    protected void insertText(String toInsert) {
         String before, after;
         if (select != -1 && select != cursor) {
             int left = Math.min(cursor, select);
@@ -382,7 +382,7 @@ public class WTextField extends WWidget {
     }
 
 
-    private void copySelection() {
+    protected void copySelection() {
         String selection = getSelection();
         if (selection != null) {
             Minecraft.getInstance().keyboardHandler.setClipboard(selection);
@@ -390,13 +390,13 @@ public class WTextField extends WWidget {
     }
 
 
-    private void paste() {
+    protected void paste() {
         String clip = Minecraft.getInstance().keyboardHandler.getClipboard();
         insertText(clip);
     }
 
 
-    private void deleteSelection() {
+    protected void deleteSelection() {
         int left = Math.min(cursor, select);
         int right = Math.max(cursor, select);
         if (setTextWithResult(text.substring(0, left) + text.substring(right))) {
@@ -407,7 +407,7 @@ public class WTextField extends WWidget {
     }
 
 
-    private void delete(int modifiers, boolean backwards) {
+    protected void delete(int modifiers, boolean backwards) {
         if (select == -1 || select == cursor) {
             select = skipCharaters((GLFW.GLFW_MOD_CONTROL & modifiers) != 0, backwards ? -1 : 1);
         }
@@ -415,7 +415,7 @@ public class WTextField extends WWidget {
     }
 
 
-    private int skipCharaters(boolean skipMany, int direction) {
+    protected int skipCharaters(boolean skipMany, int direction) {
         if (direction != -1 && direction != 1) return cursor;
         int position = cursor;
         while (true) {

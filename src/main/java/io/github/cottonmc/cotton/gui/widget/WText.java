@@ -30,8 +30,8 @@ public class WText extends WWidget {
     protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
     protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 
-    private List<FormattedCharSequence> wrappedLines;
-    private boolean wrappingScheduled = false;
+    protected List<FormattedCharSequence> wrappedLines;
+    protected boolean wrappingScheduled = false;
 
     public WText(Component text) {
         this(text, WLabel.DEFAULT_TEXT_COLOR);
@@ -55,7 +55,7 @@ public class WText extends WWidget {
     }
 
 
-    private void wrapLines() {
+    protected void wrapLines() {
         Font font = Minecraft.getInstance().font;
         wrappedLines = font.split(text, width);
     }
