@@ -188,7 +188,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
         if (thumbState == 1 && isFocused()) {
             float px = 1 / 32f;
-            ScreenDrawing.texturedRect(matrices, thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24*px, 0*px, 32*px, 20*px, 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(matrices, thumbX, thumbY, thumbWidth, thumbHeight, WSlider.LIGHT_TEXTURE, 24 * px, 0 * px, 32 * px, 20 * px, 0xFFFFFFFF);
         }
 
         if (label != null) {

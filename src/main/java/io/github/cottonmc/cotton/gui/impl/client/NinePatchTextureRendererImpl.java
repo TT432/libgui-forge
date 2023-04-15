@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
  * An implementation of LibNinePatch's {@link ContextualTextureRenderer} for identifiers.
  */
 public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<ResourceLocation, PoseStack> {
-    INSTANCE;
+	INSTANCE;
 
     @Override
     public void draw(ResourceLocation texture, PoseStack matrices, int x, int y, int width, int height, float u1, float v1, float u2, float v2) {

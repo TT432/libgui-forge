@@ -285,6 +285,6 @@ public class WBar extends WWidget {
         UP,
         RIGHT,
         DOWN,
-        LEFT;
+        LEFT
     }
 }

@@ -2,7 +2,6 @@ package io.github.cottonmc.cotton.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.CottonHud;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
@@ -46,7 +45,7 @@ public class WWidget {
 
     /**
      * The containing {@link GuiDescription} of this widget.
-     * Can be null if this widget is a {@linkplain CottonHud HUD} widget.
+     * Can be null if this widget is a {@linkplain io.github.cottonmc.cotton.gui.client.CottonHud HUD} widget.
      */
     @Nullable
     protected GuiDescription host;

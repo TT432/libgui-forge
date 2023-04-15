@@ -458,7 +458,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
     //extends ScreenHandler {
     @Override
     public boolean stillValid(Player entity) {
-        return (blockInventory != null) ? blockInventory.stillValid(entity) : true;
+        return blockInventory == null || blockInventory.stillValid(entity);
     }
 
     @Override

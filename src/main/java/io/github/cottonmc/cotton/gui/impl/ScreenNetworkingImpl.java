@@ -35,7 +35,7 @@ public class ScreenNetworkingImpl implements ScreenNetworking {
     private static final Map<SyncedGuiDescription, ScreenNetworkingImpl> instanceCache = new WeakHashMap<>();
 
     private final Map<ResourceLocation, MessageReceiver> messages = new HashMap<>();
-    private SyncedGuiDescription description;
+    private final SyncedGuiDescription description;
     private final NetworkSide side;
 
     private ScreenNetworkingImpl(SyncedGuiDescription description, NetworkSide side) {

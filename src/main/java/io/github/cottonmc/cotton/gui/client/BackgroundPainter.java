@@ -5,7 +5,6 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
 import juuxel.libninepatch.NinePatch;
-import juuxel.libninepatch.NinePatch.Builder;
 import juuxel.libninepatch.TextureRegion;
 import net.minecraft.resources.ResourceLocation;
 
@@ -24,7 +23,7 @@ public interface BackgroundPainter {
      * @param top   The absolute position of the top of the panel, in gui-screen coordinates
      * @param panel The panel being painted
      */
-    public void paintBackground(PoseStack matrices, int left, int top, WWidget panel);
+    void paintBackground(PoseStack matrices, int left, int top, WWidget panel);
 
     /**
      * The {@code VANILLA} background painter draws a vanilla-like GUI panel using nine-patch textures.
@@ -37,7 +36,7 @@ public interface BackgroundPainter {
      *
      * @since 1.5.0
      */
-    public static BackgroundPainter VANILLA = createLightDarkVariants(
+    BackgroundPainter VANILLA = createLightDarkVariants(
             createNinePatch(new ResourceLocation(dustw.libgui.LibGui.MOD_ID, "textures/widget/panel_light.png")),
             createNinePatch(new ResourceLocation(dustw.libgui.LibGui.MOD_ID, "textures/widget/panel_dark.png"))
     );
@@ -47,11 +46,10 @@ public interface BackgroundPainter {
      *
      * <p>For {@linkplain WItemSlot item slots}, this painter uses {@link WItemSlot#SLOT_TEXTURE libgui:textures/widget/item_slot.png}.
      */
-    public static BackgroundPainter SLOT = (matrices, left, top, panel) -> {
-        if (!(panel instanceof WItemSlot)) {
+    BackgroundPainter SLOT = (matrices, left, top, panel) -> {
+        if (!(panel instanceof WItemSlot slot)) {
             ScreenDrawing.drawBeveledPanel(matrices, left - 1, top - 1, panel.getWidth() + 2, panel.getHeight() + 2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
         } else {
-            WItemSlot slot = (WItemSlot) panel;
             for (int x = 0; x < slot.getWidth() / 18; ++x) {
                 for (int y = 0; y < slot.getHeight() / 18; ++y) {
                     int index = x + y * (slot.getWidth() / 18);
@@ -87,7 +85,7 @@ public interface BackgroundPainter {
      * @return a colorful gui panel painter
      * @see ScreenDrawing#drawGuiPanel(PoseStack, int, int, int, int, int)
      */
-    public static BackgroundPainter createColorful(int panelColor) {
+    static BackgroundPainter createColorful(int panelColor) {
         return (matrices, left, top, panel) -> {
             ScreenDrawing.drawGuiPanel(matrices, left, top, panel.getWidth(), panel.getHeight(), panelColor);
         };
@@ -100,7 +98,7 @@ public interface BackgroundPainter {
      * @param contrast   the contrast between the shadows and highlights
      * @return a colorful gui panel painter
      */
-    public static BackgroundPainter createColorful(int panelColor, float contrast) {
+    static BackgroundPainter createColorful(int panelColor, float contrast) {
         return (matrices, left, top, panel) -> {
             int shadowColor = ScreenDrawing.multiplyColor(panelColor, 1.0f - contrast);
             int hilightColor = ScreenDrawing.multiplyColor(panelColor, 1.0f + contrast);
@@ -119,7 +117,7 @@ public interface BackgroundPainter {
      * @see NinePatchBackgroundPainter
      * @since 1.5.0
      */
-    public static NinePatchBackgroundPainter createNinePatch(ResourceLocation texture) {
+    static NinePatchBackgroundPainter createNinePatch(ResourceLocation texture) {
         return createNinePatch(new Texture(texture), builder -> builder.cornerSize(4).cornerUv(0.25f));
     }
 
@@ -127,14 +125,14 @@ public interface BackgroundPainter {
      * Creates a new nine-patch background painter with a custom configuration.
      *
      * @param texture      the background painter texture
-     * @param configurator a consumer that configures the {@link Builder}
+     * @param configurator a consumer that configures the {@link NinePatch.Builder}
      * @return the created nine-patch background painter
      * @see NinePatch
-     * @see Builder
+     * @see NinePatch.Builder
      * @see NinePatchBackgroundPainter
      * @since 4.0.0
      */
-    public static NinePatchBackgroundPainter createNinePatch(Texture texture, Consumer<Builder<ResourceLocation>> configurator) {
+    static NinePatchBackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<ResourceLocation>> configurator) {
         TextureRegion<ResourceLocation> region = new TextureRegion<>(texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2());
         var builder = NinePatch.builder(region);
         configurator.accept(builder);
@@ -150,7 +148,7 @@ public interface BackgroundPainter {
      * @return a new background painter that chooses between the two inputs
      * @since 1.5.0
      */
-    public static BackgroundPainter createLightDarkVariants(BackgroundPainter light, BackgroundPainter dark) {
+    static BackgroundPainter createLightDarkVariants(BackgroundPainter light, BackgroundPainter dark) {
         return (matrices, left, top, panel) -> {
             if (LibGui.isDarkMode()) dark.paintBackground(matrices, left, top, panel);
             else light.paintBackground(matrices, left, top, panel);

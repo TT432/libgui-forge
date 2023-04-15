@@ -1,28 +1,28 @@
 package io.github.cottonmc.cotton.gui.widget.data;
 
 public interface Color {
-    public static final Color WHITE = rgb(0xFF_FFFFFF);
-    public static final Color BLACK = rgb(0xFF_000000);
-    public static final Color RED = rgb(0xFF_FF0000);
-    public static final Color GREEN = rgb(0xFF_00FF00);
-    public static final Color BLUE = rgb(0xFF_0000FF);
+    Color WHITE = rgb(0xFF_FFFFFF);
+    Color BLACK = rgb(0xFF_000000);
+    Color RED = rgb(0xFF_FF0000);
+    Color GREEN = rgb(0xFF_00FF00);
+    Color BLUE = rgb(0xFF_0000FF);
 
-    public static final Color WHITE_DYE = rgb(0xFF_F9FFFE);
-    public static final Color ORANGE_DYE = rgb(0xFF_F9801D);
-    public static final Color MAGENTA_DYE = rgb(0xFF_C74EBD);
-    public static final Color LIGHT_BLUE_DYE = rgb(0xFF_3AB3DA);
-    public static final Color YELLOW_DYE = rgb(0xFF_FED83D);
-    public static final Color LIME_DYE = rgb(0xFF_80C71F);
-    public static final Color PINK_DYE = rgb(0xFF_F38BAA);
-    public static final Color GRAY_DYE = rgb(0xFF_474F52);
-    public static final Color LIGHT_GRAY_DYE = rgb(0xFF_9D9D97);
-    public static final Color CYAN_DYE = rgb(0xFF_169C9C);
-    public static final Color PURPLE_DYE = rgb(0xFF_8932B8);
-    public static final Color BLUE_DYE = rgb(0xFF_3C44AA);
-    public static final Color BROWN_DYE = rgb(0xFF_835432);
-    public static final Color GREEN_DYE = rgb(0xFF_5E7C16);
-    public static final Color RED_DYE = rgb(0xFF_B02E26);
-    public static final Color BLACK_DYE = rgb(0xFF_1D1D21);
+    Color WHITE_DYE = rgb(0xFF_F9FFFE);
+    Color ORANGE_DYE = rgb(0xFF_F9801D);
+    Color MAGENTA_DYE = rgb(0xFF_C74EBD);
+    Color LIGHT_BLUE_DYE = rgb(0xFF_3AB3DA);
+    Color YELLOW_DYE = rgb(0xFF_FED83D);
+    Color LIME_DYE = rgb(0xFF_80C71F);
+    Color PINK_DYE = rgb(0xFF_F38BAA);
+    Color GRAY_DYE = rgb(0xFF_474F52);
+    Color LIGHT_GRAY_DYE = rgb(0xFF_9D9D97);
+    Color CYAN_DYE = rgb(0xFF_169C9C);
+    Color PURPLE_DYE = rgb(0xFF_8932B8);
+    Color BLUE_DYE = rgb(0xFF_3C44AA);
+    Color BROWN_DYE = rgb(0xFF_835432);
+    Color GREEN_DYE = rgb(0xFF_5E7C16);
+    Color RED_DYE = rgb(0xFF_B02E26);
+    Color BLACK_DYE = rgb(0xFF_1D1D21);
 
     Color[] DYE_COLORS = {
             WHITE_DYE, ORANGE_DYE, MAGENTA_DYE, LIGHT_BLUE_DYE,
@@ -34,22 +34,22 @@ public interface Color {
     /**
      * Gets an ARGB integer representing this color in the sRGB colorspace.
      */
-    public int toRgb();
+    int toRgb();
 
 
-    public static Color rgb(int value) {
+    static Color rgb(int value) {
         return new RGB(value);
     }
 
-    public static Color rgb(int a, int r, int g, int b) {
+    static Color rgb(int a, int r, int g, int b) {
         return new RGB(a, r, g, b);
     }
 
-    public static Color opaqueRgb(int value) {
+    static Color opaqueRgb(int value) {
         return new RGB(value | 0xFF_000000);
     }
 
-    public static class RGB implements Color {
+    class RGB implements Color {
         private final int value;
 
         public RGB(int value) {
@@ -208,7 +208,7 @@ public interface Color {
         }
     }
 
-    public static class HSL implements Color {
+    class HSL implements Color {
         /**
          * HSL Hue, from 0..1
          */
@@ -220,7 +220,7 @@ public interface Color {
         /**
          * HSL Luma, from 0..1
          */
-        private float luma;
+        private final float luma;
 
         /**
          * @param hue  hue angle, between 0 and 1
@@ -345,19 +345,19 @@ public interface Color {
         }
     }
 
-    public static class LCH implements Color {
+    class LCH implements Color {
         /**
          * HCL Luma, from 0..1
          */
-        private float luma;
+        private final float luma;
         /**
          * HCL Chroma, from 0..1
          */
-        private float chroma;
+        private final float chroma;
         /**
          * HCL Hue, from 0..1
          */
-        private float hue;
+        private final float hue;
 
 
         public LCH(float luma, float chroma, float hue) {

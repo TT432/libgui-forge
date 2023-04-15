@@ -17,5 +17,5 @@ public interface PropertyDelegateHolder {
      *
      * @return the property delegate
      */
-    public ContainerData getPropertyDelegate();
+    ContainerData getPropertyDelegate();
 }

@@ -20,7 +20,7 @@ public final class CottonHud {
     private static final Map<WWidget, Positioner> positioners = new HashMap<>();
 
     static {
-        HudRenderCallback.register((matrices, tickDelta) -> {
+        HudRenderCallback.EVENTS.add((matrices, tickDelta) -> {
             Window window = Minecraft.getInstance().getWindow();
             int hudWidth = window.getGuiScaledWidth();
             int hudHeight = window.getGuiScaledHeight();

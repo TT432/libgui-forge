@@ -18,11 +18,11 @@ import org.jetbrains.annotations.Nullable;
  * @see SyncedGuiDescription
  */
 public interface GuiDescription {
-    public WPanel getRootPanel();
+    WPanel getRootPanel();
 
-    public int getTitleColor();
+    int getTitleColor();
 
-    public GuiDescription setRootPanel(WPanel panel);
+    GuiDescription setRootPanel(WPanel panel);
 
     /**
      * Sets the title color of this GUI.
@@ -35,7 +35,7 @@ public interface GuiDescription {
      * @param color the new title color
      * @return this GUI
      */
-    public GuiDescription setTitleColor(int color);
+    GuiDescription setTitleColor(int color);
 
     /**
      * Sets the light and dark title colors of this GUI.
@@ -50,45 +50,43 @@ public interface GuiDescription {
     /**
      * Sets the object which manages the integer properties used by WBars
      */
-    public GuiDescription setPropertyDelegate(ContainerData delegate);
+    GuiDescription setPropertyDelegate(ContainerData delegate);
 
     /**
      * Typical users won't call this. This adds a Slot to Container/Controller-based guis, and does nothing on lightweight guis.
      */
-    public void addSlotPeer(ValidatedSlot slot);
+    void addSlotPeer(ValidatedSlot slot);
 
     /**
      * Guis should use this method to add clientside styles and BackgroundPainters to their controls
      */
 
-    public void addPainters();
+    void addPainters();
 
     /**
      * Gets the object which manages the integer properties used by WBars and such.
      */
-    @Nullable
-    public ContainerData getPropertyDelegate();
+    @Nullable ContainerData getPropertyDelegate();
 
     /**
      * Tests whether the widget is the currently-focused one.
      */
-    public boolean isFocused(WWidget widget);
+    boolean isFocused(WWidget widget);
 
     /**
      * Gets the currently-focused WWidget. May be null.
      */
-    @Nullable
-    public WWidget getFocus();
+    @Nullable WWidget getFocus();
 
     /**
      * Notifies this gui that the widget wants to acquire focus.
      */
-    public void requestFocus(WWidget widget);
+    void requestFocus(WWidget widget);
 
     /**
      * Notifies this gui that the widget wants to give up its hold over focus.
      */
-    public void releaseFocus(WWidget widget);
+    void releaseFocus(WWidget widget);
 
     /**
      * Cycles the focused widget in the GUI.
