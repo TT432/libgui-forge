@@ -5,7 +5,6 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.Level;
@@ -42,9 +41,9 @@ public final class VisualLogger {
         logger.log(level, message, params);
 
         if (!FMLEnvironment.production) {
-            var text = new TextComponent(clazz.getSimpleName() + '/');
-            text.append(new TextComponent(level.name()).withStyle(formatting));
-            text.append(new TextComponent(": " + ParameterizedMessage.format(message, params)));
+            var text = Component.translatable(clazz.getSimpleName() + '/');
+            text.append(Component.translatable(level.name()).withStyle(formatting));
+            text.append(Component.translatable(": " + ParameterizedMessage.format(message, params)));
 
             WARNINGS.add(text);
         }

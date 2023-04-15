@@ -2,24 +2,27 @@ package io.github.cottonmc.cotton.gui.client;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dustw.libgui.mixin.ScreenAccessor;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
+import io.github.cottonmc.cotton.gui.impl.client.FocusElements;
 import io.github.cottonmc.cotton.gui.impl.client.MouseInputHandler;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationHelper;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -28,6 +31,7 @@ import org.lwjgl.opengl.GL11;
  * @param <T> the description type
  */
 public class CottonInventoryScreen<T extends SyncedGuiDescription> extends AbstractContainerScreen<T> implements CottonScreenImpl {
+    private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
     protected SyncedGuiDescription description;
     @Nullable
     protected WWidget lastResponder = null;
@@ -41,7 +45,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
      * @since 5.2.0
      */
     public CottonInventoryScreen(T description, Inventory inventory) {
-        this(description, inventory, new TextComponent(""));
+        this(description, inventory, CommonComponents.EMPTY);
     }
 
     /**
@@ -102,6 +106,14 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
         description.addPainters();
 
         reposition(width, height);
+
+        if (root != null) {
+            GuiEventListener rootPanelElement = FocusElements.ofPanel(root);
+            ((ScreenAccessor) this).libgui$getChildren().add(rootPanelElement);
+            setInitialFocus(rootPanelElement);
+        } else {
+            LOGGER.warn("No root panel found, keyboard navigation disabled");
+        }
     }
 
     @Override
@@ -233,28 +245,32 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
 
     @Override
     public boolean charTyped(char ch, int keyCode) {
-        if (description.getFocus() == null) return super.charTyped(ch, keyCode);
-        description.getFocus().onCharTyped(ch);
-        return true;
+        WWidget focus = description.getFocus();
+        if (focus != null && focus.onCharTyped(ch) == InputResult.PROCESSED) {
+            return true;
+        }
+
+        return super.charTyped(ch, keyCode);
     }
 
     @Override
     public boolean keyPressed(int ch, int keyCode, int modifiers) {
-        if (ch == GLFW.GLFW_KEY_ESCAPE || ch == GLFW.GLFW_KEY_TAB) {
-            // special hardcoded keys, these will never be delivered to widgets
-            return super.keyPressed(ch, keyCode, modifiers);
-        } else {
-            if (description.getFocus() == null) return super.keyPressed(ch, keyCode, modifiers);
-            description.getFocus().onKeyPressed(ch, keyCode, modifiers);
+        WWidget focus = description.getFocus();
+        if (focus != null && focus.onKeyPressed(ch, keyCode, modifiers) == InputResult.PROCESSED) {
             return true;
         }
+
+        return super.keyPressed(ch, keyCode, modifiers);
     }
 
     @Override
     public boolean keyReleased(int ch, int keyCode, int modifiers) {
-        if (description.getFocus() == null) return super.keyReleased(ch, keyCode, modifiers);
-        description.getFocus().onKeyReleased(ch, keyCode, modifiers);
-        return true;
+        WWidget focus = description.getFocus();
+        if (focus != null && focus.onKeyReleased(ch, keyCode, modifiers) == InputResult.PROCESSED) {
+            return true;
+        }
+
+        return super.keyReleased(ch, keyCode, modifiers);
     }
 
     @Override
@@ -320,15 +336,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
     @Override
     public void renderTextHover(PoseStack matrices, @Nullable Style textStyle, int x, int y) {
         renderComponentHoverEffect(matrices, textStyle, x, y);
-    }
-
-    @Override
-    public boolean changeFocus(boolean lookForwards) {
-        if (description != null) {
-            description.cycleFocus(lookForwards);
-        }
-
-        return true;
     }
 
     @Override

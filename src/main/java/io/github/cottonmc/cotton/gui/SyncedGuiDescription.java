@@ -142,7 +142,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
             }
 
             if (slotStack.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
@@ -187,9 +187,9 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
         ItemStack curSlotStack = slot.getItem();
         if (curSlotStack.isEmpty() && slot.mayPlace(toInsert)) {
             if (toInsert.getCount() > slot.getMaxStackSize(toInsert)) {
-                slot.set(toInsert.split(slot.getMaxStackSize(toInsert)));
+                slot.setByPlayer(toInsert.split(slot.getMaxStackSize(toInsert)));
             } else {
-                slot.set(toInsert.split(toInsert.getCount()));
+                slot.setByPlayer(toInsert.split(toInsert.getCount()));
             }
 
             slot.setChanged();

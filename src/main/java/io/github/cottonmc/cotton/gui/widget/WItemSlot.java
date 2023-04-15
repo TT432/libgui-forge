@@ -8,12 +8,14 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import io.github.cottonmc.cotton.gui.widget.data.Rect2i;
+import io.github.cottonmc.cotton.gui.widget.focus.Focus;
+import io.github.cottonmc.cotton.gui.widget.focus.FocusModel;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * A widget that displays an item that can be interacted with.
@@ -85,6 +88,42 @@ public class WItemSlot extends WWidget {
     protected int hoveredSlot = -1;
     protected Predicate<ItemStack> filter = ValidatedSlot.DEFAULT_ITEM_FILTER;
     protected final Set<ChangeListener> listeners = new HashSet<>();
+    private final FocusModel<Integer> focusModel = new FocusModel<>() {
+        @Override
+        public boolean isFocused(Focus<Integer> focus) {
+            return focusedSlot == focus.key();
+        }
+
+        @Override
+        public void setFocused(Focus<Integer> focus) {
+            focusedSlot = focus.key();
+        }
+
+        @Override
+        public Stream<Focus<Integer>> foci() {
+            Stream.Builder<Focus<Integer>> builder = Stream.builder();
+            int index = 0;
+
+            for (int y = 0; y < slotsHigh; y++) {
+                for (int x = 0; x < slotsWide; x++) {
+                    int slotX = x * 18;
+                    int slotY = y * 18;
+                    int size = 18;
+
+                    if (big) {
+                        slotX -= 4;
+                        slotY -= 4;
+                        size = 26;
+                    }
+
+                    builder.add(new Focus<>(index, new Rect2i(slotX, slotY, size, size)));
+                    index++;
+                }
+            }
+
+            return builder.build();
+        }
+    };
 
     public WItemSlot(Container inventory, int startIndex, int slotsWide, int slotsHigh, boolean big) {
         this();
@@ -304,13 +343,16 @@ public class WItemSlot extends WWidget {
 
 
     @Override
-    public void onKeyPressed(int ch, int key, int modifiers) {
+    public InputResult onKeyPressed(int ch, int key, int modifiers) {
         if (isActivationKey(ch) && host instanceof AbstractContainerMenu handler && focusedSlot >= 0) {
             Minecraft client = Minecraft.getInstance();
 
             ValidatedSlot peer = peers.get(focusedSlot);
             client.gameMode.handleInventoryMouseClick(handler.containerId, peer.index, 0, ClickType.PICKUP, client.player);
+            return InputResult.PROCESSED;
         }
+
+        return InputResult.IGNORED;
     }
 
     /**
@@ -388,24 +430,8 @@ public class WItemSlot extends WWidget {
 
     @Nullable
     @Override
-    public WWidget cycleFocus(boolean lookForwards) {
-        if (focusedSlot < 0) {
-            focusedSlot = lookForwards ? 0 : (slotsWide * slotsHigh - 1);
-            return this;
-        }
-
-        if (lookForwards) {
-            focusedSlot++;
-            if (focusedSlot >= slotsWide * slotsHigh) {
-                focusedSlot = -1;
-                return null;
-            } else {
-                return this;
-            }
-        } else {
-            focusedSlot--;
-            return focusedSlot >= 0 ? this : null;
-        }
+    public FocusModel<?> getFocusModel() {
+        return focusModel;
     }
 
     @Override
@@ -468,9 +494,9 @@ public class WItemSlot extends WWidget {
         if (name != null) parts.add(name);
 
         if (focusedSlot >= 0) {
-            parts.add(new TranslatableComponent(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
+            parts.add(Component.translatable(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1, slotsWide * slotsHigh));
         } else if (hoveredSlot >= 0) {
-            parts.add(new TranslatableComponent(NarrationMessages.ITEM_SLOT_TITLE_KEY, hoveredSlot + 1, slotsWide * slotsHigh));
+            parts.add(Component.translatable(NarrationMessages.ITEM_SLOT_TITLE_KEY, hoveredSlot + 1, slotsWide * slotsHigh));
         }
 
         builder.add(NarratedElementType.TITLE, parts.toArray(new Component[0]));

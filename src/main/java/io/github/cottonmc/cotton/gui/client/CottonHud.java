@@ -2,9 +2,12 @@ package io.github.cottonmc.cotton.gui.client;
 
 import com.mojang.blaze3d.platform.Window;
 import dustw.libgui.event.ClientTickEvents;
-import dustw.libgui.event.HudRenderCallback;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,26 +17,30 @@ import java.util.Set;
 /**
  * Manages widgets that are painted on the in-game HUD.
  */
-
+@Mod.EventBusSubscriber(Dist.CLIENT)
 public final class CottonHud {
     private static final Set<WWidget> widgets = new HashSet<>();
     private static final Map<WWidget, Positioner> positioners = new HashMap<>();
 
-    static {
-        HudRenderCallback.EVENTS.add((matrices, tickDelta) -> {
+    @SubscribeEvent
+    public static void onEvent(RegisterGuiOverlaysEvent event) {
+        event.registerBelowAll("libgui", (gui, poseStack, partialTick, screenWidth, screenHeight) -> {
             Window window = Minecraft.getInstance().getWindow();
             int hudWidth = window.getGuiScaledWidth();
             int hudHeight = window.getGuiScaledHeight();
+
             for (WWidget widget : widgets) {
                 Positioner positioner = positioners.get(widget);
                 if (positioner != null) {
                     positioner.reposition(widget, hudWidth, hudHeight);
                 }
 
-                widget.paint(matrices, widget.getX(), widget.getY(), -1, -1);
+                widget.paint(poseStack, widget.getX(), widget.getY(), -1, -1);
             }
         });
+    }
 
+    static {
         ClientTickEvents.registerEnd(client -> {
             for (WWidget widget : widgets) {
                 widget.tick();

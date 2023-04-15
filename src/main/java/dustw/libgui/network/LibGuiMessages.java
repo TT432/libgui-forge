@@ -17,6 +17,7 @@ public class LibGuiMessages {
 
     // Every packet needs a unique ID (unique for this channel)
     private static int packetId = 0;
+
     private static int id() {
         return packetId++;
     }
@@ -38,7 +39,7 @@ public class LibGuiMessages {
         net.messageBuilder(LibGuiPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(LibGuiPacket::new)
                 .encoder(LibGuiPacket::toBytes)
-                .consumer(LibGuiPacket::handler)
+                .consumerMainThread(LibGuiPacket::handler)
                 .add();
     }
 

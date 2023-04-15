@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.ObservableProperty;
+import io.github.cottonmc.cotton.gui.widget.focus.FocusModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -245,8 +246,8 @@ public class WWidget {
      *
      * @param ch the character typed
      */
-
-    public void onCharTyped(char ch) {
+    public InputResult onCharTyped(char ch) {
+        return InputResult.IGNORED;
     }
 
     /**
@@ -254,8 +255,8 @@ public class WWidget {
      *
      * @param key the GLFW scancode of the key
      */
-
-    public void onKeyPressed(int ch, int key, int modifiers) {
+    public InputResult onKeyPressed(int ch, int key, int modifiers) {
+        return InputResult.IGNORED;
     }
 
     /**
@@ -263,8 +264,8 @@ public class WWidget {
      *
      * @param key the GLFW scancode of the key
      */
-
-    public void onKeyReleased(int ch, int key, int modifiers) {
+    public InputResult onKeyReleased(int ch, int key, int modifiers) {
+        return InputResult.IGNORED;
     }
 
     /**
@@ -436,17 +437,19 @@ public class WWidget {
     }
 
     /**
-     * Cycles the focus inside this widget.
+     * Returns the focus model of this widget. The focus
+     * model provides the focusable areas of this widget,
+     * and handles switching through them.
      *
-     * <p>If this widget is not focusable, returns null.
+     * <p>If this widget {@linkplain #canFocus() can focus}, it should return
+     * a nonnull focus model. The default implementation returns
+     * {@link FocusModel#simple FocusModel.simple(this)} when the widget can be focused.
      *
-     * @param lookForwards whether this should cycle forwards (true) or backwards (false)
-     * @return the next focused widget, or null if should exit to the parent panel
-     * @since 2.0.0
+     * @return the focus model, or {@code null} if not available
+     * @since 7.0.0
      */
-    @Nullable
-    public WWidget cycleFocus(boolean lookForwards) {
-        return canFocus() ? (isFocused() ? null : this) : null;
+    public @Nullable FocusModel<?> getFocusModel() {
+        return canFocus() ? FocusModel.simple(this) : null;
     }
 
     /**

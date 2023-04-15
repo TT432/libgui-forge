@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui;
 
-import io.github.cottonmc.cotton.gui.impl.FocusHandler;
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -87,16 +86,6 @@ public interface GuiDescription {
      * Notifies this gui that the widget wants to give up its hold over focus.
      */
     void releaseFocus(WWidget widget);
-
-    /**
-     * Cycles the focused widget in the GUI.
-     *
-     * @param lookForwards whether this should cycle forwards (true) or backwards (false)
-     * @since 2.0.0
-     */
-    default void cycleFocus(boolean lookForwards) {
-        FocusHandler.cycleFocus(this, lookForwards);
-    }
 
     /**
      * Gets whether this GUI is fullscreen.

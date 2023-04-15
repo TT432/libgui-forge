@@ -1,6 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget.icon;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -41,19 +40,14 @@ public class ItemIcon implements Icon {
 
     @Override
     public void paint(PoseStack matrices, int x, int y, int size) {
-        // TODO: Make this not ignore the actual matrices
         Minecraft client = Minecraft.getInstance();
         ItemRenderer renderer = client.getItemRenderer();
-        PoseStack modelViewMatrices = RenderSystem.getModelViewStack();
-
         float scale = size != 16 ? ((float) size / 16f) : 1f;
 
-        modelViewMatrices.pushPose();
-        modelViewMatrices.translate(x, y, 0);
-        modelViewMatrices.scale(scale, scale, 1);
-        RenderSystem.applyModelViewMatrix();
-        renderer.renderAndDecorateFakeItem(stack, 0, 0);
-        modelViewMatrices.popPose();
-        RenderSystem.applyModelViewMatrix();
+        matrices.pushPose();
+        matrices.translate(x, y, 0);
+        matrices.scale(scale, scale, 1);
+        renderer.renderAndDecorateFakeItem(matrices, stack, 0, 0);
+        matrices.popPose();
     }
 }

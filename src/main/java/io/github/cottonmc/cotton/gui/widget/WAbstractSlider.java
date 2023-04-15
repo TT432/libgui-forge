@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -319,7 +319,7 @@ public abstract class WAbstractSlider extends WWidget {
 
 
     @Override
-    public void onKeyPressed(int ch, int key, int modifiers) {
+    public InputResult onKeyPressed(int ch, int key, int modifiers) {
         boolean valueChanged = false;
         if (modifiers == 0) {
             if (isDecreasingKey(ch, direction) && value > min) {
@@ -343,15 +343,20 @@ public abstract class WAbstractSlider extends WWidget {
             onValueChanged(value);
             pendingDraggingFinishedFromKeyboard = true;
         }
+
+        return InputResult.of(valueChanged);
     }
 
 
     @Override
-    public void onKeyReleased(int ch, int key, int modifiers) {
+    public InputResult onKeyReleased(int ch, int key, int modifiers) {
         if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch, direction) || isIncreasingKey(ch, direction))) {
             if (draggingFinishedListener != null) draggingFinishedListener.accept(value);
             pendingDraggingFinishedFromKeyboard = false;
+            return InputResult.PROCESSED;
         }
+
+        return InputResult.IGNORED;
     }
 
     /**
@@ -367,7 +372,7 @@ public abstract class WAbstractSlider extends WWidget {
 
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, new TranslatableComponent(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
+        builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
         builder.add(NarratedElementType.USAGE, NarrationMessages.SLIDER_USAGE);
     }
 

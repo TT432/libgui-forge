@@ -131,26 +131,15 @@ repositories {
     // }
 }
 
-configurations {
-    shade
-    implementation.extendsFrom shade
-}
-
-minecraft.runs.all {
-    lazyToken('minecraft_classpath') {
-        configurations.shade.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-    }
-}
-
 dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${project.mc_version}-${project.forge_version}"
 
-    shade("io.github.juuxel:libninepatch:1.1.0")
-    jarJar(group: 'io.github.juuxel', name: 'libninepatch', version: '[1.1.0, )') {
-        jarJar.pin(it, '1.1.0')
+    minecraftLibrary("io.github.juuxel:libninepatch:1.2.0")
+    jarJar(group: 'io.github.juuxel', name: 'libninepatch', version: '[1.2.0, )') {
+        jarJar.pin(it, '1.2.0')
     }
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

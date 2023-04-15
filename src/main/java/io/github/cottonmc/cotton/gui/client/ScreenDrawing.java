@@ -2,7 +2,6 @@ package io.github.cottonmc.cotton.gui.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import io.github.cottonmc.cotton.gui.impl.client.CottonScreenImpl;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
@@ -13,6 +12,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 /**
  * {@code ScreenDrawing} contains utility methods for drawing contents on a screen.
@@ -137,12 +137,11 @@ public class ScreenDrawing {
         RenderSystem.setShaderColor(r, g, b, opacity);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(model, x,         y + height, 0).uv(u1, v2).endVertex();
+        buffer.vertex(model, x, y + height, 0).uv(u1, v2).endVertex();
         buffer.vertex(model, x + width, y + height, 0).uv(u2, v2).endVertex();
-        buffer.vertex(model, x + width, y,          0).uv(u2, v1).endVertex();
-        buffer.vertex(model, x,         y,          0).uv(u1, v1).endVertex();
-        buffer.end();
-        BufferUploader.end(buffer);
+        buffer.vertex(model, x + width, y, 0).uv(u2, v1).endVertex();
+        buffer.vertex(model, x, y, 0).uv(u1, v1).endVertex();
+        BufferUploader.drawWithShader(buffer.end());
         RenderSystem.disableBlend();
     }
 

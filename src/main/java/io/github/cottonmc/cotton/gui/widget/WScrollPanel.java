@@ -6,8 +6,6 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
-import java.util.function.Function;
-
 /**
  * Similar to the JScrollPane in Swing, this widget represents a scrollable widget.
  *
@@ -49,27 +47,6 @@ public class WScrollPanel extends WClippedPanel {
 
         children.add(widget);
         children.add(verticalScrollBar); // Only vertical scroll bar
-    }
-
-    /**
-     * Creates a vertically scrolling panel with custom scroll bar.
-     *
-     * @param widget the viewed widget
-     * @param scrollBarProvider a function to provide scroll bar of specified axis
-     * @param scrollBarSize width of scroll bars
-     */
-    public WScrollPanel(WWidget widget, Function<Axis, WScrollBar> scrollBarProvider, int scrollBarSize) {
-        this.widget = widget;
-
-        widget.setParent(this);
-        horizontalScrollBar = scrollBarProvider.apply(Axis.HORIZONTAL);
-        verticalScrollBar = scrollBarProvider.apply(Axis.VERTICAL);
-        horizontalScrollBar.setParent(this);
-        verticalScrollBar.setParent(this);
-
-        children.add(widget);
-        children.add(verticalScrollBar); // Only vertical scroll bar
-        this.scrollBarSize = scrollBarSize;
     }
 
     /**

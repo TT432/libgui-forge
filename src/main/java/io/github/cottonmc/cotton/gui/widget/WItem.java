@@ -5,7 +5,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.tags.Tag;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -29,7 +32,7 @@ public class WItem extends WWidget {
         setItems(items);
     }
 
-    public WItem(Tag<? extends ItemLike> tag) {
+    public WItem(TagKey<? extends ItemLike> tag) {
         this(getRenderStacks(tag));
     }
 
@@ -58,9 +61,7 @@ public class WItem extends WWidget {
 
         Minecraft mc = Minecraft.getInstance();
         ItemRenderer renderer = mc.getItemRenderer();
-        renderer.blitOffset = 100f;
-        renderer.renderAndDecorateFakeItem(items.get(current), x + getWidth() / 2 - 9, y + getHeight() / 2 - 9);
-        renderer.blitOffset = 0f;
+        renderer.renderAndDecorateFakeItem(matrices, items.get(current), x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
     }
 
     /**
@@ -104,11 +105,12 @@ public class WItem extends WWidget {
      * Gets the default stacks ({@link Item#getDefaultInstance()} ()}) of each item in a tag.
      */
     @SuppressWarnings("unchecked")
-    protected static List<ItemStack> getRenderStacks(Tag<? extends ItemLike> tag) {
+    private static List<ItemStack> getRenderStacks(TagKey<? extends ItemLike> tag) {
+        Registry<ItemLike> registry = (Registry<ItemLike>) BuiltInRegistries.REGISTRY.get(tag.registry().location());
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
 
-        for (ItemLike item : tag.getValues()) {
-            builder.add(new ItemStack(item));
+        for (Holder<ItemLike> item : registry.getOrCreateTag((TagKey<ItemLike>) tag)) {
+            builder.add(item.value().asItem().getDefaultInstance());
         }
 
         return builder.build();

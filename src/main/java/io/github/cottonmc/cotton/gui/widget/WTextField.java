@@ -3,7 +3,6 @@ package io.github.cottonmc.cotton.gui.widget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
@@ -15,9 +14,9 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -245,8 +244,7 @@ public class WTextField extends WWidget {
         BufferBuilder buffer = tessellator.getBuilder();
         Matrix4f model = matrices.last().pose();
         RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.disableTexture();
+        RenderSystem.setShader(GameRenderer::getPositionShader);
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
@@ -254,10 +252,9 @@ public class WTextField extends WWidget {
         buffer.vertex(model, x + width, y + height, 0).endVertex();
         buffer.vertex(model, x + width, y, 0).endVertex();
         buffer.vertex(model, x, y, 0).endVertex();
-        buffer.end();
-        BufferUploader.end(buffer);
+        BufferUploader.drawWithShader(buffer.end());
         RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     public WTextField setTextPredicate(Predicate<String> predicate_1) {
@@ -357,8 +354,9 @@ public class WTextField extends WWidget {
 
 
     @Override
-    public void onCharTyped(char ch) {
+    public InputResult onCharTyped(char ch) {
         insertText(ch + "");
+        return InputResult.PROCESSED;
     }
 
 
@@ -450,19 +448,19 @@ public class WTextField extends WWidget {
 
 
     @Override
-    public void onKeyPressed(int ch, int key, int modifiers) {
-        if (!isEditable()) return;
+    public InputResult onKeyPressed(int ch, int key, int modifiers) {
+        if (!isEditable()) return InputResult.IGNORED;
 
         if (Screen.isCopy(ch)) {
             copySelection();
-            return;
+            return InputResult.PROCESSED;
         } else if (Screen.isPaste(ch)) {
             paste();
-            return;
+            return InputResult.PROCESSED;
         } else if (Screen.isSelectAll(ch)) {
             select = 0;
             cursor = text.length();
-            return;
+            return InputResult.PROCESSED;
         }
 
         switch (ch) {
@@ -482,16 +480,21 @@ public class WTextField extends WWidget {
                 }
                 cursor = text.length();
             }
+            default -> {
+                return InputResult.IGNORED;
+            }
         }
         scrollCursorIntoView();
+
+        return InputResult.PROCESSED;
     }
 
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, new TranslatableComponent(NarrationMessages.TEXT_FIELD_TITLE_KEY, text));
+        builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.TEXT_FIELD_TITLE_KEY, text));
 
         if (suggestion != null) {
-            builder.add(NarratedElementType.HINT, new TranslatableComponent(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
+            builder.add(NarratedElementType.HINT, Component.translatable(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
         }
     }
 }
