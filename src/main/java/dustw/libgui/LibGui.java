@@ -2,6 +2,7 @@ package dustw.libgui;
 
 import dustw.libgui.network.LibGuiMessages;
 import io.github.cottonmc.cotton.gui.impl.client.LibGuiConfig;
+import io.github.cottonmc.cotton.gui.impl.client.LibGuiShaders;
 import net.minecraftforge.fml.common.Mod;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -12,6 +13,7 @@ public class LibGui {
     public static final String MOD_ID = "libgui";
 
     public LibGui() {
+        LibGuiShaders.register();
         LibGuiConfig.register();
         LibGuiMessages.register();
     }

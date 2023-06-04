@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public final class LibGuiShaders {
     private static @Nullable ShaderInstance tiledRectangle;
 
-    static void register() {
+    public static void register() {
         CoreShaderRegistrationCallback.EVENTS.add(context -> {
             // Register our core shaders.
             // The tiled rectangle shader is used for performant tiled texture rendering.
